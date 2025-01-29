@@ -6,6 +6,12 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = require("../config");
 const authMiddleware = require('../middleware');
 const { Types } = require('mongoose');
+
+router.get("/", async (req, res) => {
+    const users = await UserModel.find({});
+    res.json(users);
+    
+})
  
 
 const signupSchema = zod.object({
@@ -19,7 +25,7 @@ router.post("/signup", async(req, res) => {
     const body = req.body;
     const parsedResult = signupSchema.safeParse(body);
     if (!parsedResult.success) {
-        return res.json({
+        return res.status(400).json({
             message: "Incorrect inputs"
         })
     }
@@ -27,7 +33,7 @@ router.post("/signup", async(req, res) => {
     const existingUser = await UserModel.findOne({ username: body.username });
 
     if (existingUser) {
-        return res.json({
+        return res.status(201).json({
             message: "Username already taken"
         })
     }
@@ -69,20 +75,20 @@ router.post("/login", async(req, res) => {
     const body = req.body;
     const parsedResult = loginSchema.safeParse(body);
     if (!parsedResult.success) {
-        return res.json({
+        return res.status(403).json({
             message: "Incorrect inputs"
         })
     }
 
     const user = await UserModel.findOne({ username: body.username });
     if (!user) {
-        return res.json({
+        return res.status(203).json({
             message: "User not found"
         })
     }
 
     if (body.password !== user.password) {
-        return res.json({
+        return res.status(403).json({
             message: "Incorrect password"
         })
     }   
@@ -90,7 +96,7 @@ router.post("/login", async(req, res) => {
     const token = jwt.sign({
         userId
     }, JWT_SECRET);
-    res.json({
+    res.status(200).json({
         message: "User logged in successfully",
         token
     });
@@ -124,23 +130,28 @@ router.put("/update", authMiddleware, async(req, res) => {
     });
 })
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
     const filter = req.query.filter || "";
 
     const users = await UserModel.find({
         $or: [{
             firstname: {
-                "$regex": filter
+                "$regex": filter,
+                "$options": "i"
             }
         }, {
             lastname: {
-                "$regex": filter
+                "$regex": filter,
+                "$options": "i"
             }
-        }, {
-            username: {
-                "$regex": filter
-            }
-        }]
+        }, 
+        // {
+        //     username: {
+        //         "$regex": filter,
+        //         "$options": "i"
+        //     }
+        // }
+    ]
     })
 
     res.json({

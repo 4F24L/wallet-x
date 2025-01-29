@@ -16,18 +16,18 @@ router.get("/balance", authMiddleware, async (req, res) => {
 })
 
 const toUserSchema = zod.object({
-    amount: zod.number().positive("Amount should be positive").int("Should be integer"),
-    toUser: zod.string(),
+    amount: zod.coerce.number(),
+    sendTo: zod.string(),
 })
 router.post("/transfer", authMiddleware, async (req, res) => {
     const session = await mongoose.startSession();
 
    session.startTransaction();
-   const {amount, toUser} = req.body;
+   const {amount, sendTo} = req.body;
    const parsedResult = toUserSchema.safeParse(req.body);
 
    if(!parsedResult.success){
-    return res.status(400).json({
+    return res.status(420).json({
         message: "Invalid inputs"
     })
    }
@@ -41,7 +41,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     });
    }
 
-   const toAccount = await Account.findOne({userId: toUser}).session(session);
+   const toAccount = await Account.findOne({userId: sendTo}).session(session);
 
    if(!toAccount){
     await session.abortTransaction();
@@ -54,11 +54,11 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     await Account.updateOne({userId: req.userId}, {$inc: {balance: -amount}}).session(session)
 
     //to User account update + ammount
-    await Account.updateOne({userId: toUser}, {$inc: {balance: amount}}).session(session);
+    await Account.updateOne({userId: sendTo}, {$inc: {balance: amount}}).session(session);
 
     await session.commitTransaction();
 
-    res.json({
+    res.status(200).json({
         message: "Transfer Successful"
     })
 

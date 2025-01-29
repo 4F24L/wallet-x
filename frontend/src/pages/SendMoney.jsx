@@ -1,24 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InputBox from '../components/InputBox'
 import Button from '../components/Button'
-import img from '../assets/image.png'
-
+import { useSearchParams } from'react-router-dom';
+import axios from 'axios';
+const token = localStorage.getItem('token');
 
 const SendMoney = () => {
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id');
+  const name = searchParams.get('name');
+
+  const [amount, setAmount] = useState(0);
+  
+  
   return (
-    <div className='p-4 flex flex-col items-center mt-8 justify-center '>
+    <div className='p-8 flex flex-col items-center mt-8 justify-center border rounded-2xl w-[40%] m-auto gap-5'>
 
     {/* user name */}
     <div className='flex items-center px-2 gap-2'>
-      <img className='h-6 w-6' src={img} alt='user' />
-      <div className='text-xl font-medium'>User1 </div>
+      <div className=' h-7 w-7 rounded-full border flex justify-center items-center text-xl font-bold ' >{name.charAt(0).toUpperCase()}</div>
+      <div className='text-xl font-medium'>{name}</div>
     </div>
 
     {/* amount */}
-    <InputBox label={"Amount (In Rupees)"} placeholder={"Enter amount"}/>
+    <InputBox type={"number"} onChange={(e)=>{
+      setAmount(e.target.value);
+    }} label={"Amount (In Rupees)"} placeholder={"Enter amount"}/>
 
     {/* send button */}
-    <Button label={"Send Money"} />
+    <Button onClick={async () => {
+      const result = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+        sendTo : id,
+        amount,
+      },{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+    }} label={"Send Money"} />
 
     </div>
   )

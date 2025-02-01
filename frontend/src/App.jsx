@@ -8,10 +8,32 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import SendMoney from './pages/SendMoney';
 import NavBar from './components/NavBar';
+import { useEffect } from 'react';
 
 
 
 function App() {
+
+  // -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
+    useEffect(() => {
+      const checkMobileScreen = () => {
+        if (window.innerWidth <= 768) { // Typical breakpoint for mobile
+          alert("You're on a mobile device!");
+          document.body.innerHTML = ''; // Clears the entire homepage content
+        }
+      };
+  
+      checkMobileScreen();
+  
+      // Optional: Add event listener to detect resizing
+      window.addEventListener('resize', checkMobileScreen);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        window.removeEventListener('resize', checkMobileScreen);
+      };
+    }, []);
+    // -x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-
 
   return (
     <>

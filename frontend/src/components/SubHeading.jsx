@@ -1,8 +1,8 @@
 import React from 'react'
 
-const SubHeading = ({label}) => {
+const SubHeading = ({label, classs, onClick}) => {
   return (
-    <div className=' fill-slate-800 text-l pt-3'>
+    <div onClick={onClick} className={` fill-slate-800 text-l ${classs}`}>
         {label}
     </div>
   )

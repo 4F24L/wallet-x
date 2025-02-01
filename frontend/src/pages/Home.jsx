@@ -1,17 +1,29 @@
-import React from 'react'
-import Heading from '../components/Heading'
-import SubHeading from '../components/SubHeading'
-import InputBox from '../components/InputBox'
-import NavBar from '../components/NavBar'
+import React, { useEffect, useState } from 'react'
+import Loader from '../components/Loader'
+import NavBar from '../components/NavBar';
+import Hero from '../components/Hero';
+import HeroNext from '../components/HeroNext';
+
 
 const Home = () => {
+
+const [loading, setLoading] = useState(false);
+
+useEffect(() => {
+  setLoading(true);
+  setTimeout(() => {
+    setLoading(false);
+  }, 3500);
+
+}, [])
   return (
-    <>
-    <NavBar />
-    <Heading label={"Sign Up"} />
-    <SubHeading label={"Enter your info to signup"}/>
-    <InputBox placeholder={"John Doe"} label={"Your Name"}/>
-    </>
+    <div className=''>
+    {loading && <Loader/>}
+    <NavBar/>
+    <Hero/>
+    <HeroNext/>
+  
+    </div>
   )
 }
 

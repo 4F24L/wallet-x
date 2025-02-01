@@ -1,5 +1,9 @@
 # Wallet X
 
+<p align="center">
+<img src="https://github.com/user-attachments/assets/a5a9139b-ccda-4682-9ae0-5365b2e7a222" height="450" >
+</p>
+
 **Wallet X** is a digital wallet application that allows users to manage their balances, make transfers, and track financial transactions. The app is built with modern web technologies and features a secure, user-friendly interface.
 
 ## Features

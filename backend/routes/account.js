@@ -7,11 +7,13 @@ const { default: mongoose } = require('mongoose');
 const authMiddleware = require("../middleware")
 
 router.get("/balance", authMiddleware, async (req, res) => {
-    const userAccount = await Account.findOne({ userId: req.userId });
+    try{const userAccount = await Account.findOne({ userId: req.userId });
 
     res.json({
         balance: userAccount.balance
-    });
+    });} catch (err) {
+        res.status(500).json({message: err.message})
+    }
 
 })
 
@@ -20,7 +22,7 @@ const toUserSchema = zod.object({
     sendTo: zod.string(),
 })
 router.post("/transfer", authMiddleware, async (req, res) => {
-    const session = await mongoose.startSession();
+    try{const session = await mongoose.startSession();
 
    session.startTransaction();
    const {amount, sendTo} = req.body;
@@ -61,6 +63,10 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     res.status(200).json({
         message: "Transfer Successful"
     })
+} catch (err) {
+    await session.abortTransaction();
+    res.status(500).json({message: err.message})
+}
 
 })
 

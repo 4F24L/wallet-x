@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/api/v1/(.*)", "destination": "https://wallet-x.up.railway.app/api/v1/$1" }
   ],
-  "redirects": [
-    { "source": "/api/(.*)", "destination": "https://wallet-x.up.railway.app", "statusCode": 200 }
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

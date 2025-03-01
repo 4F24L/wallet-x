@@ -3,3 +3,11 @@
 {"source" : "/(.*)", "destination": "/"}
 ]
 }
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "redirects": [
+    { "source": "/api/(.*)", "destination": "https://wallet-x.up.railway.app", "statusCode": 200 }
+  ]
+}

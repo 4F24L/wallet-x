@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
 const mainRouter = require('./routes/index');
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 const cors = require('cors');
 
 app.use(cors({
-  origin: "https://wallet-x.up.railway.app",  
+  origin: ["https://wallet-x.up.railway.app", "https://wallet-x-app.vercel.app" ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 })); 

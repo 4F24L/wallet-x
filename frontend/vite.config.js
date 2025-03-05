@@ -7,8 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: { port: 5173, host: "0.0.0.0" },
   define: {
-    "import.meta.env.VITE_API_BASE_URL": JSON.stringify(
-      process.env.VITE_API_BASE_URL
-    ),
+    "import.meta.env.VITE_API_BASE_URL": process.env.VITE_API_BASE_URL
   },
 });

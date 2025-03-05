@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: '../.env'  });
+dotenv.config({ path: '../.env' });
 
 
 mongoose.connect(process.env.MONGO_DB_STRING)
@@ -58,4 +58,4 @@ const Account = mongoose.model("Account", accountSchema)
 module.exports = {
     UserModel, 
     Account
-};
+}; 

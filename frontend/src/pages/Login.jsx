@@ -10,12 +10,16 @@ import Loader from "../components/Loader";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
 
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const backendURL = import.meta.env.VITE_API_BASE_URL;
+  console.log(backendURL);
+
+  const navigate = useNavigate();
 
   const handleClick = async () => {
       try {
@@ -25,7 +29,6 @@ const Login = () => {
           { username, password }
         );
 
-        console.log(response);
         if (response?.status === 200) {
           toast.success(response?.data?.message);
           setLoading(true);
@@ -44,8 +47,6 @@ const Login = () => {
         toast.error("Failed to login. Please try again.");
       }
     };
-
-  const navigate = useNavigate();
 
   return (
     <>

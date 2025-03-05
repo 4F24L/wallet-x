@@ -4,6 +4,9 @@ import User from "./User";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
+const backendURL = import.meta.env.VITE_API_BASE_URL;
+
+
 function Users() {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
@@ -14,7 +17,7 @@ function Users() {
   useEffect(() => {
     async function fetchUser() {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/User/bulk/?filter=${filter}`,
+        `http://192.168.10.115:3000/api/v1/User/bulk/?filter=${filter}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),

@@ -4,6 +4,8 @@ import Button from '../components/Button'
 import { useSearchParams } from'react-router-dom';
 import axios from 'axios';
 const token = localStorage.getItem('token');
+const backendURL = import.meta.env.VITE_API_BASE_URL;
+
 
 const SendMoney = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +31,7 @@ const SendMoney = () => {
 
     {/* send button */}
     <Button onClick={async () => {
-      const result = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+      const result = await axios.post(`${backendURL}/api/v1/account/transfer`, {
         sendTo : id,
         amount,
       },{

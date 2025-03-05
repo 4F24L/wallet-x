@@ -15,11 +15,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const backendURL = import.meta.env.VITE_API_BASE_URL;
+
   const handleClick = async () => {
       try {
        
         const response = await axios.post(
-          "http://localhost:3000/api/v1/user/login",
+          `${backendURL}/api/v1/user/login`,
           { username, password }
         );
 

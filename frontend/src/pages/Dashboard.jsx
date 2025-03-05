@@ -6,7 +6,7 @@ import User from "../components/User";
 import Balance from "../components/Balance";
 import axios from "axios";
 import Users from "../components/Users";
-import { jwtDecode } from "jwt-decode";
+import  jwtDecode from "jwt-decode";
 import NavBar from "../components/NavBar";
 
 const backendURL = import.meta.env.VITE_API_BASE_URL;

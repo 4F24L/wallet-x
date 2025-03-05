@@ -10,7 +10,6 @@ import Loader from "../components/Loader";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -22,31 +21,28 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleClick = async () => {
-      try {
-       
-        const response = await axios.post(
-          `${backendURL}/api/v1/user/login`,
-          { username, password }
-        );
+    try {
+      const response = await axios.post(`${backendURL}/api/v1/user/login`, {
+        username,
+        password,
+      });
 
-        if (response?.status === 200) {
-          toast.success(response?.data?.message);
-          setLoading(true);
-          localStorage.setItem("token", response?.data?.token);
+      if (response?.status === 200) {
+        toast.success(response?.data?.message);
+        setLoading(true);
+        localStorage.setItem("token", response?.data?.token);
 
         setTimeout(() => {
           navigate("/dashboard");
         }, 3500);
-
-        } else {
-          setLoading(false);
-          toast.error(response?.data?.message);
-        }
-
-      } catch (error) {
-        toast.error("Failed to login. Please try again.");
+      } else {
+        setLoading(false);
+        toast.error(response?.data?.message);
       }
-    };
+    } catch (error) {
+      toast.error("Failed to login. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -54,7 +50,7 @@ const Login = () => {
       <div className="flex justify-center items-center flex-col mt-20 sm:my-3">
         <Toaster position="top-center" />
         <Heading label={"Login"} />
-        <SubHeading label={"Enter Login Credentials"} classs={"my-5"}/>
+        <SubHeading label={"Enter Login Credentials"} classs={"my-5"} />
 
         <InputBox
           width={"sm:w-md"}
@@ -76,9 +72,7 @@ const Login = () => {
           placeholder={"John@12"}
         />
 
-        <Button onClick={handleClick}
-          label={"Submit"}
-        />
+        <Button onClick={handleClick} label={"Submit"} />
 
         <LinkText
           link={"/signup"}

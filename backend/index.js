@@ -3,6 +3,9 @@ const app = express();
 const mainRouter = require('./routes/index');
 const port = Number(process.env.PORT) || 3000;
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 app.use(cors({
   origin: ["https://wallet-x.up.railway.app", "https://wallet-x-app.vercel.app" ],

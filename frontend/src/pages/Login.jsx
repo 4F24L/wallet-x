@@ -9,20 +9,19 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
-
+import api from "../api";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const backendURL = import.meta.env.VITE_API_BASE_URL;
-  console.log(backendURL);
+  
 
   const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
-      const response = await axios.post(`${backendURL}/api/v1/user/login`, {
+      const response = await api.post(`/api/v1/user/login`, {
         username,
         password,
       });

@@ -6,18 +6,18 @@ import User from "../components/User";
 import Balance from "../components/Balance";
 import axios from "axios";
 import Users from "../components/Users";
-import  jwtDecode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import NavBar from "../components/NavBar";
+import api from "../api";
 
-const backendURL = import.meta.env.VITE_API_BASE_URL;
 
 const Dashboard = () => {
   const [name, setName] = useState("");
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    axios
-      .get(`${backendURL}/api/v1/User`)
+    api
+      .get(`/api/v1/User`)
       .then((res) => {
         const token = localStorage.getItem("token") || "";
         const userId = jwtDecode(token);
@@ -34,7 +34,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     async function fetchBalance() {
-      const result = await axios.get(`${backendURL}/api/v1/account/balance`, {
+      const result = await api.get(`/api/v1/account/balance`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

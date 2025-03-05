@@ -8,6 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
+import api from "../api";
 const backendURL = import.meta.env.VITE_API_BASE_URL;
 
 const SignUp = () => {
@@ -68,8 +69,8 @@ const SignUp = () => {
         <Button
           onClick={async () => {
             try {
-              const result = await axios.post(
-                `${backendURL}/api/v1/user/signup`,
+              const result = await api.post(
+                `/api/v1/user/signup`,
                 {
                   firstname,
                   lastname,

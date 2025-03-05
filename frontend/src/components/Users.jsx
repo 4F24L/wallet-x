@@ -3,8 +3,7 @@ import InputBox from "./InputBox";
 import User from "./User";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-
-const backendURL = import.meta.env.VITE_API_BASE_URL;
+import api from "../api";
 
 
 function Users() {
@@ -16,8 +15,8 @@ function Users() {
 
   useEffect(() => {
     async function fetchUser() {
-      const response = await axios.get(
-        `http://192.168.10.115:3000/api/v1/User/bulk/?filter=${filter}`,
+      const response = await api.get(
+        `/api/v1/User/bulk/?filter=${filter}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -45,7 +44,7 @@ function Users() {
 
       <div className="flex flex-col ">
         {users.map(user => (
-            <User user={user} key={user._id} />
+            <User user={user} key={user.id} />
           ))}
       </div>
     </div>

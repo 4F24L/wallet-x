@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(cors({
-  origin: [ "https://wallet-x.up.railway.app", "https://wallet-x-app.vercel.app", "http://localhost:5173" ],
+  origin: [ "https://wallet-x-app.vercel.app", "http://localhost:5173" ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 })); 

@@ -7,7 +7,7 @@ const Balance = () => {
   const balance = useRecoilValue(UserBal);
   const [showBal, setShowBal] = useState(false)
   return (
-        <div className="bg-gradient-to-r from-black to-gray-800 mt-7 p-6 rounded-2xl shadow-lg text-white w-[94%] m-3 ">
+        <div className="bg-gradient-to-r from-black to-[#7e7e7d] mt-7 p-6 rounded-2xl shadow-lg text-white w-[94%] m-3 ">
           <div className="flex justify-between items-center">
             <div>
               <h5 className="text-base font-medium">Total Balance</h5>

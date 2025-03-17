@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import SendMoney from './pages/SendMoney';
 import Users from './components/Users';
+import Receipt from './components/Receipt';
 
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/send' element={<SendMoney />} />
           <Route path='/sendMoney' element={<Users />} />
+          <Route path='/receipt' element={<Receipt />} />
+
           <Route path='*' element={<NotFound />} />
 
         </Routes>

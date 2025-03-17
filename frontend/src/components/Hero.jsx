@@ -2,6 +2,7 @@ import React from "react";
 import Button from "./Button";
 import scroll from "../assets/scrollDown.json";
 import { useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Hero = () => {
       }} label={"Get Started"} className={"mt-7 mb-5"} />
 
       <span className=" h-35 w-35 sm:h-40 sm:w-40 flex">
+      <Lottie animationData={scroll} loop={true} />
       </span>
     </div>
   );

@@ -2,13 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { UserName } from "../store/atoms/UserData";
+import Loader from "./Loader"
 import { User } from "lucide-react";
 
 const UserMenu = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
-  const [name, setName] = useRecoilValue(UserName);
+  const [name] = useRecoilValue(UserName);
+  const [loading, setLoading] = useState(false)
 
   // Close popup if clicked outside
   useEffect(() => {
@@ -27,7 +29,10 @@ const UserMenu = () => {
   // Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    setLoading(true)
+    setTimeout(() => {
+      navigate("/login");
+    }, 3500);
   };
 
   return (
@@ -54,6 +59,8 @@ const UserMenu = () => {
           </button>
         </div>
       )}
+
+      {loading && <Loader/>}
     </div>
   );
 };

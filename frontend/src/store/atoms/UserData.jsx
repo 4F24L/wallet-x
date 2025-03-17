@@ -9,3 +9,13 @@ export const UserName = atom({
     key: "userNameState",
     default: "",
 });
+
+export const SentMoney = atom({
+  key: "sentMoneyState",
+  default: 0,
+});
+
+export const recieverName = atom({
+  key: "receiverNameState",
+  default: "",
+});

@@ -4,6 +4,7 @@ import User from "./User";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
+import { DollarSign } from "lucide-react";
 
 
 function Users() {
@@ -32,17 +33,18 @@ function Users() {
   }, [filter, token]);
 
   return (
-    <div className=" w-full justify-start px-4 mx-3">
-      <div className=" font-bold mt-6 text-lg">Users</div>
+    <div className=" w-full justify-start px-4">
+      <div className=" font-bold mt-6 text-2xl flex items-center"><DollarSign /> Send Money</div>
       <InputBox
         onChange={(e) => {
           setFilter(e.target.value);
         }}
-        width={"w-full mb-3"}
+        width={"w-full mt-5"}
         placeholder="Search by name"
       />
+      {filter && <p className=" font-medium text-lg mb-4">Found {users.length} {users.length>1 ?"results" : "result"}</p>}
 
-      <div className="flex flex-col gap-3 ">
+      <div className="flex flex-col gap-y-2 w-full mt-2">
         {users.map(user => (
             <User user={user} key={user.id} />
           ))}

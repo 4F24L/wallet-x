@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Heading from "./Heading";
 import Icon from "./Icon";
 import defUser from "../assets/defaultUser.svg";
@@ -6,8 +6,11 @@ import Button from "./Button";
 import SubHeading from "./SubHeading";
 import logo from "../assets/walletLogo.svg";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { UserName } from "../store/atoms/UserData";
+import UserMenu from "./UserMenu";
 
-const NavBar = ({ onHome }) => {
+const NavBar = ({ onHome, loggedIn }) => {
   const navigate = useNavigate();
   return (
     <div className=" flex justify-between border-b-slate-700 bg-white items-center px-3 h-[9vh] cursor-pointer w-full">
@@ -45,6 +48,11 @@ const NavBar = ({ onHome }) => {
           />
         </div>
       )}
+
+      {loggedIn && 
+        <UserMenu/>
+      }
+      
     </div>
   );
 };

@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Heading from "../components/Heading";
-import SubHeading from "../components/SubHeading";
-import InputBox from "../components/InputBox";
-import User from "../components/User";
 import Balance from "../components/Balance";
-import axios from "axios";
 import Users from "../components/Users";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import NavBar from "../components/NavBar";
 import api from "../api";
-
+import { useRecoilState } from "recoil";
+import { UserBal, UserName } from "../store/atoms/UserData";
+import WalletIcons from "../components/WalletIcons";
+import TransactionHistory from "../components/TransactionHistory";
 
 const Dashboard = () => {
-  const [name, setName] = useState("");
-  const [balance, setBalance] = useState(0);
+  const [name, setName] = useRecoilState(UserName);
+  const [balance, setBalance] = useRecoilState(UserBal);
 
   useEffect(() => {
     api
@@ -47,13 +45,14 @@ const Dashboard = () => {
 
   return (
     <div className="flex  items-center flex-col w-full">
-      <NavBar />
+      <NavBar loggedIn={true} />
 
-      <div className=" flex justify-start w-full px-4">{`Welcome, ${name} !`}</div>
+      <div className=" flex justify-start w-full px-4 mt-3 text-2xl font-semibold">{`Hello, ${name}`}</div>
 
-      <Balance balance={balance} />
-
-      <Users />
+      <Balance />
+      <WalletIcons />
+    
+      
     </div>
   );
 };

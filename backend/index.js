@@ -6,20 +6,22 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 
 dotenv.config();
+app.use(express.json());
 
 app.use(cors({
-  origin: [ "https://wallet-x-app.vercel.app", "http://localhost:5173" ],
+  // origin: [ "https://wallet-x-app.vercel.app", "http://localhost:5173", "http://192.168.157.1:5173" ],
+  origin:  "*" ,
   methods : [ 'GET', 'POST', 'PUT', 'DELETE' ],
   credentials: true,  // allow session cookies from browser to pass through
-})); 
-app.use(express.json()); 
+}));
+
 
 
 
 app.use("/api/v1", mainRouter);
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Hello to Wallet-X !');
 });
 
 app.listen(port, "0.0.0.0", () => {

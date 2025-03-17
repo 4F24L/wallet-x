@@ -42,7 +42,7 @@ function Users() {
         placeholder="Search by name"
       />
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col gap-3 ">
         {users.map(user => (
             <User user={user} key={user.id} />
           ))}

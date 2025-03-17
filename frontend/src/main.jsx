@@ -4,5 +4,7 @@ import App from './App.jsx'
 import { RecoilRoot } from 'recoil'
 
 createRoot(document.getElementById('root')).render(
-   <App /> 
+   <RecoilRoot>
+      <App />
+   </RecoilRoot> 
 )

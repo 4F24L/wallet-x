@@ -39,10 +39,7 @@ const TransactionHistory = () => {
       {/* Mobile View (Card-style list) */}
       {isTrue && (
         <div className=" space-y-4">
-          {history
-            .slice()
-            .reverse()
-            .map((txn) => (
+          {history.map((txn) => (
               <div
                 key={txn.id}
                 className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-md hover:scale-[1.01] transition-transform"

@@ -1,108 +1,119 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const zod = require("zod");
 const { UserModel, Account } = require("../db");
-const { default: mongoose } = require("mongoose");
 const authMiddleware = require("../middleware");
 const Transaction = require("../transactionModel");
 
+// Zod schema for input validation
+const transferSchema = zod.object({
+  amount: zod.coerce.number().positive(),
+  sendTo: zod.string(),
+  note: zod.string().max(25).optional(),
+});
+
+// Route: Get balance
 router.get("/balance", authMiddleware, async (req, res) => {
   try {
     const userAccount = await Account.findOne({ userId: req.userId });
+    if (!userAccount) {
+      return res.status(404).json({ message: "Account not found" });
+    }
 
-    res.json({
-      balance: userAccount.balance,
-    });
+    res.json({ balance: userAccount.balance });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-const toUserSchema = zod.object({
-  amount: zod.coerce.number(),
-  sendTo: zod.string(),
-  note : zod.string().max(25)
-});
+// Route: Transfer money
 router.post("/transfer", authMiddleware, async (req, res) => {
-    const session = await mongoose.startSession();
+  const session = await mongoose.startSession();
+
   try {
-    
+    const parsed = transferSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      return res.status(400).json({ message: "Invalid inputs" });
+    }
+
+    const { amount, sendTo, note } = parsed.data;
+
     session.startTransaction();
-    const { amount, sendTo, note } = req.body;
-    const parsedResult = toUserSchema.safeParse(req.body);
 
-    if (!parsedResult.success) {
-      return res.status(420).json({
-        message: "Invalid inputs",
-      });
-    }
-
-    const userAccount = await Account.findOne({ userId: req.userId });
-
-    if (!userAccount || userAccount.balance < amount) {
+    // Fetch sender account
+    const senderAccount = await Account.findOne({ userId: req.userId }).session(session);
+    if (!senderAccount || senderAccount.balance < amount) {
       await session.abortTransaction();
-      return res.status(400).json({
-        message: "Insufficient balance",
-      });
+      return res.status(400).json({ message: "Insufficient balance" });
     }
 
-    const toAccount = await Account.findOne({ userId: sendTo }).session(
-      session
-    );
-
-    if (!toAccount) {
+    // Fetch receiver account
+    const receiverAccount = await Account.findOne({ userId: sendTo }).session(session);
+    if (!receiverAccount) {
       await session.abortTransaction();
-      return res.status(400).json({
-        message: "invalid account",
-      });
+      return res.status(400).json({ message: "Invalid receiver account" });
     }
 
-    //self account update - ammount
+    // Update sender balance
     await Account.updateOne(
       { userId: req.userId },
       { $inc: { balance: -amount } }
     ).session(session);
 
-    //to User account update + ammount
+    // Update receiver balance
     await Account.updateOne(
       { userId: sendTo },
       { $inc: { balance: amount } }
     ).session(session);
 
-    // Log transactions
-    const transaction = await Transaction.create(
-        {
-            transactionId: Math.floor(Math.random() * 1000000),
-            amount,
-            payer: req.userId,
-            receiver: sendTo,
-            type: "debit",
-            date: new Date(),
-            note
-        },
-        { session }
-    );
+    // Create transaction logs (both debit and credit)
+    const transactionId = Math.floor(Math.random() * 1000000).toString();
 
-    // Push transaction ID to both accounts
+    const [debitTransaction, creditTransaction] = await Transaction.create([
+      {
+        transactionId,
+        amount,
+        payer: req.userId,
+        receiver: sendTo,
+        type: "debit",
+        date: new Date(),
+        note: note || "Transfer to user",
+      },
+      {
+        transactionId,
+        amount,
+        payer: req.userId,
+        receiver: sendTo,
+        type: "credit",
+        date: new Date(),
+        note: note || "Transfer received from user",
+      }
+    ], { session });
+
+    // Update transaction references in accounts
     await Account.updateOne(
-        { userId: req.userId },
-        { $push: { transactions: transaction[0]._id } }
+      { userId: req.userId },
+      { $push: { transactions: debitTransaction._id } }
     ).session(session);
 
     await Account.updateOne(
-        { userId: sendTo },
-        { $push: { transactions: transaction[0]._id } }
+      { userId: sendTo },
+      { $push: { transactions: creditTransaction._id } }
     ).session(session);
 
+    // Commit transaction
     await session.commitTransaction();
 
-    res.status(200).json({
-      message: "Transfer Successful",
-    });
+    res.status(200).json({ message: "Transfer Successful" });
+
   } catch (err) {
     await session.abortTransaction();
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: "An error occurred", error: err.message });
+  } finally {
+    session.endSession();
   }
 });
 

@@ -22,13 +22,14 @@ router.get("/balance", authMiddleware, async (req, res) => {
 const toUserSchema = zod.object({
   amount: zod.coerce.number(),
   sendTo: zod.string(),
+  note : zod.string().max(25)
 });
 router.post("/transfer", authMiddleware, async (req, res) => {
     const session = await mongoose.startSession();
   try {
     
     session.startTransaction();
-    const { amount, sendTo } = req.body;
+    const { amount, sendTo, note } = req.body;
     const parsedResult = toUserSchema.safeParse(req.body);
 
     if (!parsedResult.success) {
@@ -71,15 +72,15 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
     // Log transactions
     const transaction = await Transaction.create(
-        [{
+        {
             transactionId: Math.floor(Math.random() * 1000000),
             amount,
             payer: req.userId,
             receiver: sendTo,
             type: "debit",
             date: new Date(),
-            description: "Transfer to user"
-        }],
+            note
+        },
         { session }
     );
 

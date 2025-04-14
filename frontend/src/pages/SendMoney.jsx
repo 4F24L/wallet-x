@@ -18,17 +18,16 @@ const SendMoney = () => {
   const navigate = useNavigate();
 
   const [amount, setAmount] = useRecoilState(SentMoney);
+  const [note, setNote] = useState("");
   const userBal = useRecoilValue(UserBal);
   const setReciever = useSetRecoilState(recieverName);
-  
+
   useEffect(() => {
     setReciever(recipientName);
-  
-  }, [name])
-  
+  }, [name]);
 
-  const handleClick = async() => {
-    if (!(amount >0)) {
+  const handleClick = async () => {
+    if (!(amount > 0)) {
       toast.error("Please enter amount");
       return;
     }
@@ -37,30 +36,33 @@ const SendMoney = () => {
       return;
     }
     try {
-      const result = await api.post(
-        `/api/v1/account/transfer`,
-        {
-          sendTo: id,
-          amount,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      const result = await api
+        .post(
+          `/api/v1/account/transfer`,
+          {
+            sendTo: id,
+            amount,
+            note
           },
-        }
-        
-      ).then(response => {
-        toast.success("Transfer Succesfull");
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success("Transfer Succesfull");
 
-        setTimeout(() => {
-          navigate("/receipt", 
-            {state: {
-            recipient: recipientName,
-            amount: amount,
-          }});
-        }, 1500)
-        setAmount(0);
-      });
+          setTimeout(() => {
+            navigate("/receipt", {
+              state: {
+                recipient: recipientName,
+                amount: amount,
+              },
+            });
+          }, 1500);
+          setAmount(0);
+        });
     } catch (err) {
       toast.error("Failed to send money");
     }
@@ -86,28 +88,34 @@ const SendMoney = () => {
           }}
           label={"Enter amount"}
           placeholder={"Enter amount"}
-          
+        />
+
+        <InputBox
+          type={"text"}
+          label={"Note :"}
+          placeholder={"Description for payment"}
+          onChange={(e) => {
+            setNote(e.target.value);
+          }}
         />
 
         <div className="flex justify-around gap-5">
-        <button
-          onClick={handleClick}
-          className="mt-4 w-full bg-white text-black py-2 rounded-lg text-xl font-medium"
-        >
-          Send
-        </button>
-        <button
-          onClick={()=>{
-            toast.error("Coming soon...")
-          }}
-          className="mt-4 w-full bg-white text-black py-2 rounded-lg text-xl font-medium"
-        >
-          Request
-        </button>
+          <button
+            onClick={handleClick}
+            className="mt-4 w-full bg-white text-black py-2 rounded-lg text-xl font-medium"
+          >
+            Send
+          </button>
+          <button
+            onClick={() => {
+              toast.error("Coming soon...");
+            }}
+            className="mt-4 w-full bg-white text-black py-2 rounded-lg text-xl font-medium"
+          >
+            Request
+          </button>
         </div>
       </div>
-
-      
 
       <Toaster />
     </>

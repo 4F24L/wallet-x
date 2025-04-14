@@ -1,45 +1,31 @@
-import { Clock, ArrowDown, ArrowUp } from "lucide-react";
-
-const transactions = [
-  {
-    id: 1,
-    type: "credit",
-    payer: "amit",
-    receiver: "afzal",
-    amount: 250,
-    date: "Mar 15, 2025",
-    desc: "Freelance Payment",
-  },
-  {
-    id: 2,
-    type: "debit",
-    payer: "afzal",
-    receiver: "rana",
-    amount: 75,
-    date: "Mar 14, 2025",
-    desc: "Online Purchase",
-  },
-  {
-    id: 3,
-    type: "credit",
-    payer: "wasim",
-    receiver: "afzal",
-    amount: 100,
-    date: "Mar 13, 2025",
-    desc: "Refund",
-  },
-  {
-    id: 4,
-    type: "debit",
-    payer: "afzal",
-    receiver: "amit",
-    amount: 30,
-    date: "Mar 12, 2025",
-    desc: "Food Delivery",
-  },
-];
+import { Clock, ArrowDown, ArrowUp, Facebook } from "lucide-react";
+import { useEffect, useState } from "react";
+import api from "../api";
 
 const TransactionHistory = () => {
+  const [history, setHistory] = useState([]);
+  const [isTrue, setIsTrue] = useState(true);
+  
+  useEffect(() => {
+    async function fetchHistory() {
+      try {
+        const result = await api.get(`/api/v1/account/history`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log(result.data);
+        setHistory(result?.data?.history);
+      } catch (err) {
+        console.error(err);
+        setIsTrue(false);
+      }
+    }
+  
+    fetchHistory();
+  }, []);
+  
+
   return (
     <div className="mt-6 mb-9 bg-gradient-to-r from-black to-gray-800 p-6 rounded-2xl shadow-lg text-white transition-all duration-500 w-[94%] ">
       {/* Header */}
@@ -51,42 +37,44 @@ const TransactionHistory = () => {
       </div>
 
       {/* Mobile View (Card-style list) */}
-      <div className=" space-y-4">
-        {transactions
-          .slice()
-          .reverse()
-          .map((txn) => (
-            <div
-              key={txn.id}
-              className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-md hover:scale-[1.01] transition-transform"
-            >
-              <div className="flex items-center">
-                {txn.type === "credit" ? (
-                  <ArrowDown className="text-green-400 w-6 h-6 mr-3" />
-                ) : (
-                  <ArrowUp className="text-red-400 w-6 h-6 mr-3" />
-                )}
-                <div>
-                  <p className="text-sm font-medium">
-                    {txn.type === "debit"
-                      ? txn.receiver.toUpperCase()
-                      : txn.payer.toUpperCase()}
-                  </p>
-                  <span className="text-xs text-gray-400">
-                    {txn.desc} {","} {txn.date.split(",")[0]}
-                  </span>
-                </div>
-              </div>
-              <span
-                className={`text-base font-semibold ${
-                  txn.type === "credit" ? "text-green-400" : "text-red-400"
-                }`}
+      {isTrue && (
+        <div className=" space-y-4">
+          {history
+            .slice()
+            .reverse()
+            .map((txn) => (
+              <div
+                key={txn.id}
+                className="flex items-center justify-between bg-gray-700 p-4 rounded-lg shadow-md hover:scale-[1.01] transition-transform"
               >
-                ${txn.amount}
-              </span>
-            </div>
-          ))}
-      </div>
+                <div className="flex items-center">
+                  {txn.type === "credit" ? (
+                    <ArrowDown className="text-green-400 w-6 h-6 mr-3" />
+                  ) : (
+                    <ArrowUp className="text-red-400 w-6 h-6 mr-3" />
+                  )}
+                  <div>
+                    <p className="text-sm font-medium">
+                      {txn.type === "debit"
+                        ? txn.receiver.toUpperCase()
+                        : txn.payer.toUpperCase()}
+                    </p>
+                    <span className="text-xs text-gray-400">
+                      {txn.desc} {","} {txn.date.split(",")[0]}
+                    </span>
+                  </div>
+                </div>
+                <span
+                  className={`text-base font-semibold ${
+                    txn.type === "credit" ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  ${txn.amount}
+                </span>
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

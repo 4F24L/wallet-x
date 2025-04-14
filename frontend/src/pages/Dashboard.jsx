@@ -50,6 +50,7 @@ const Dashboard = () => {
 
       <Balance />
       <WalletIcons />
+      
       <TransactionHistory/>
     
       

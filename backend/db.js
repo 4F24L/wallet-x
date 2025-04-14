@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
         minLength: 6
     },    
     
+    
 });
 
 const accountSchema = new mongoose.Schema({

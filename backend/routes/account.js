@@ -27,6 +27,19 @@ router.get("/balance", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/history", authMiddleware, async (req, res) => {
+  try {
+    const account = await Account.findOne({ userId: req.userId });
+    if (!userAccount) {
+      return res.status(404).json({ message: "Account not found" });
+    }
+
+    res.json({ history: account.transactions });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Route: Transfer money
 router.post("/transfer", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();

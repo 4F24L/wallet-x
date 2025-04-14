@@ -8,6 +8,7 @@ import { recieverName, SentMoney, UserBal } from "../store/atoms/UserData";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
 const token = localStorage.getItem("token");
+import { jwtDecode } from "jwt-decode";
 const backendURL = import.meta.env.VITE_API_BASE_URL;
 
 const SendMoney = () => {
@@ -22,6 +23,8 @@ const SendMoney = () => {
   const userBal = useRecoilValue(UserBal);
   const setReciever = useSetRecoilState(recieverName);
 
+  const decoded = jwtDecode(token);
+
   useEffect(() => {
     setReciever(recipientName);
   }, [name]);
@@ -31,12 +34,14 @@ const SendMoney = () => {
       toast.error("Please enter amount");
       return;
     }
-  
+
+    if (decoded?.userId === id) return toast.error("You can't send money to yourself");
+
     if (amount > userBal) {
       toast.error("Insufficient balance");
       return;
     }
-  
+
     const transferPromise = api.post(
       `/api/v1/account/transfer`,
       {
@@ -50,7 +55,7 @@ const SendMoney = () => {
         },
       }
     );
-  
+
     toast.promise(transferPromise, {
       loading: "Processing transfer...",
       success: () => {
@@ -71,7 +76,6 @@ const SendMoney = () => {
       },
     });
   };
-  
 
   return (
     <>

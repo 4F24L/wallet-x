@@ -32,7 +32,7 @@ const NavBar = ({ onHome, loggedIn }) => {
 
       {/* //Nav elements */}
       {onHome && (
-        <div className="md:flex justify-between hidden items-center gap-5 font-medium text-lg">
+        <div className=" justify-between hidden items-center gap-5 font-medium text-lg">
           <div className="cursor-pointer">Home</div>
           <div className="cursor-pointer">About</div>
           <div className="cursor-pointer">How to use ?</div>

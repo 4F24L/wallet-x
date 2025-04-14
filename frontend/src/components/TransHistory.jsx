@@ -35,7 +35,6 @@ const TransactionHistory = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        console.log(result.data.list);
         setTaxns(result?.data?.list || []);
         setError(null); // Reset error if the request is successful
       } catch (err) {
@@ -62,7 +61,7 @@ const TransactionHistory = () => {
 
       {/* Mobile View (Card-style list) */}
 
-      <div className="space-y-4">
+      { taxns.length === 0 ? <div className="sub-heading sm:text-xl text-center">No transactions to show </div> : <div className="space-y-4">
         {taxns.map((txn, index) => (
           <div
             key={index} // Use _id for unique key
@@ -92,7 +91,7 @@ const TransactionHistory = () => {
             </span>
           </div>
         ))}
-      </div>
+      </div>}
     </div>
   );
 };

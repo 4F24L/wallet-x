@@ -5,6 +5,7 @@ const zod = require("zod");
 const { UserModel, Account } = require("../db");
 const authMiddleware = require("../middleware");
 const Transaction = require("../transactionModel");
+const { v4: uuidv4 } = require('uuid');
 
 // Zod schema for input validation
 const transferSchema = zod.object({
@@ -29,12 +30,18 @@ router.get("/balance", authMiddleware, async (req, res) => {
 
 router.get("/history", authMiddleware, async (req, res) => {
   try {
-    const account = await Account.findOne({ userId: req.userId });
+    const userAccount = await Account.findOne({ userId: req.userId }).populate({
+      path: 'transactions',
+      populate: [
+        { path: 'payer', select: '-password' },
+        { path: 'receiver', select: '-password' }
+      ]
+    });
     if (!userAccount) {
       return res.status(404).json({ message: "Account not found" });
     }
 
-    res.json({ history: account.transactions });
+    res.json({ history: userAccount.transactions });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -82,7 +89,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     ).session(session);
 
     // Create transaction logs (both debit and credit)
-    const transactionId = Math.floor(Math.random() * 1000000).toString();
+    const transactionId = uuidv4();
 
     const [debitTransaction, creditTransaction] = await Transaction.create([
       {

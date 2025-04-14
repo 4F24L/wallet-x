@@ -5,7 +5,7 @@ const zod = require("zod");
 const { UserModel, Account } = require("../db");
 const authMiddleware = require("../middleware");
 const Transaction = require("../transactionModel");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 // Zod schema for input validation
 const transferSchema = zod.object({
@@ -30,20 +30,44 @@ router.get("/balance", authMiddleware, async (req, res) => {
 
 router.get("/history", authMiddleware, async (req, res) => {
   try {
-    const userAccount = await Account.findOne({ userId: req.userId }).populate({
-      path: 'transactions',
-      populate: [
-        { path: 'payer', select: '-password' },
-        { path: 'receiver', select: '-password' }
-      ]
-    });
-    if (!userAccount) {
+    // Step 1: Find the account for the user and populate transactions
+    const account = await Account.findOne({ userId: req.userId })
+      .populate({
+        path: "transactions",
+        populate: [
+          { path: "payer", model: "User", select: "-password" },
+          { path: "receiver", model: "User", select: "-password" },
+        ],
+      })
+      .exec();
+
+    if (!account) {
       return res.status(404).json({ message: "Account not found" });
     }
 
-    res.json({ history: userAccount.transactions });
+    // Step 2: Ensure transactions is an array and map the data for each transaction
+    const history = account.transactions || [];
+
+    if (history.length === 0) {
+      return res.status(200).json({ message: "No transactions found" });
+    }
+
+    // Map the transactions to include all necessary details
+    const list = history.map((txn) => ({
+      transactionId: txn._id,
+      type: txn.type,
+      amount: txn.amount,
+      date: txn.date,
+      note: txn.note,
+      payer: `${txn.payer.firstname} ${txn.payer.lastname}`, // assuming payer has 'name' field
+      receiver: `${txn.receiver.firstname} ${txn.receiver.lastname}`, // assuming receiver has 'name' field
+    }));
+
+    // Step 3: Return the array of transaction objects
+    res.json({list});
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error fetching transaction history:", err); // Improved logging
+    res.status(500).json({ message: "Internal Server Error" }); // More generic error message
   }
 });
 
@@ -63,14 +87,18 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     session.startTransaction();
 
     // Fetch sender account
-    const senderAccount = await Account.findOne({ userId: req.userId }).session(session);
+    const senderAccount = await Account.findOne({ userId: req.userId }).session(
+      session
+    );
     if (!senderAccount || senderAccount.balance < amount) {
       await session.abortTransaction();
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
     // Fetch receiver account
-    const receiverAccount = await Account.findOne({ userId: sendTo }).session(session);
+    const receiverAccount = await Account.findOne({ userId: sendTo }).session(
+      session
+    );
     if (!receiverAccount) {
       await session.abortTransaction();
       return res.status(400).json({ message: "Invalid receiver account" });
@@ -91,26 +119,29 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     // Create transaction logs (both debit and credit)
     const transactionId = uuidv4();
 
-    const [debitTransaction, creditTransaction] = await Transaction.create([
-      {
-        transactionId,
-        amount,
-        payer: req.userId,
-        receiver: sendTo,
-        type: "debit",
-        date: new Date(),
-        note: note || "Transfer to user",
-      },
-      {
-        transactionId,
-        amount,
-        payer: req.userId,
-        receiver: sendTo,
-        type: "credit",
-        date: new Date(),
-        note: note || "Transfer received from user",
-      }
-    ], { session });
+    const [debitTransaction, creditTransaction] = await Transaction.create(
+      [
+        {
+          transactionId,
+          amount,
+          payer: req.userId,
+          receiver: sendTo,
+          type: "debit",
+          date: new Date(),
+          note: note || "Transfered",
+        },
+        {
+          transactionId,
+          amount,
+          payer: req.userId,
+          receiver: sendTo,
+          type: "credit",
+          date: new Date(),
+          note: note || "Received",
+        },
+      ],
+      { session }
+    );
 
     // Update transaction references in accounts
     await Account.updateOne(
@@ -127,7 +158,6 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     await session.commitTransaction();
 
     res.status(200).json({ message: "Transfer Successful" });
-
   } catch (err) {
     await session.abortTransaction();
     console.error(err);

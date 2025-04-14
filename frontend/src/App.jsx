@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import SendMoney from './pages/SendMoney';
 import Users from './components/Users';
 import Receipt from './components/Receipt';
+import History from './pages/History';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path='/send' element={<SendMoney />} />
           <Route path='/sendMoney' element={<Users />} />
           <Route path='/receipt' element={<Receipt />} />
+          <Route path='/history' element={<History />} />
 
           <Route path='*' element={<NotFound />} />
 

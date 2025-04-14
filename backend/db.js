@@ -52,10 +52,10 @@ const accountSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    transactions: {
+    transactions: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Transaction'
-    }
+    }]
 })
 
 const UserModel = mongoose.model('User', userSchema);

@@ -7,7 +7,7 @@ const WalletIcons = () => {
   return (
     <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-5 w-[94%] border-t-2 pt-8 ">
       <button onClick={()=>{
-        toast.error("Try Send Money!");
+        toast.error("Coming in V2! Try Other Options");
       }} className="flex flex-col items-center justify-center bg-gradient-to-r from-black to-gray-800 p-4 rounded-xl transition-all duration-300 hover:brightness-125">
         <Plus className="text-white w-6 h-6" />
         <span className="mt-2 text-sm font-medium text-white">Add Money</span>
@@ -21,7 +21,7 @@ const WalletIcons = () => {
       </button>
 
       <button onClick={()=>{
-        toast.error("Try Send Money!");
+        toast.error("Coming in V2! Try Other Options");
       }} className="flex flex-col items-center justify-center bg-gradient-to-r from-black to-gray-800 p-4 rounded-xl transition-all duration-300 hover:brightness-125">
         <Wallet className="text-white w-6 h-6" />
         <span className="mt-2 text-sm font-medium text-white">Withdraw</span>
@@ -35,7 +35,7 @@ const WalletIcons = () => {
       </button>
 
       <button onClick={()=>{
-        toast.error("Try Send Money!");
+        toast.error("Coming in V2! Try Other Options");
       }} className="flex flex-col items-center justify-center bg-gradient-to-r from-black to-gray-800 p-4 rounded-xl transition-all duration-300 hover:brightness-125 col-span-2 md:col-span-1">
         <QrCode className="text-white w-6 h-6" />
         <span className="mt-2 text-sm font-medium text-white">Scan QR</span>

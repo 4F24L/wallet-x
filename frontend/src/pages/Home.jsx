@@ -30,7 +30,7 @@ const Home = () => {
       )}
       <NavBar onHome={true} />
       <Hero />
-      <HeroNext />
+      <HeroNext /> 
     </div>
   );
 };

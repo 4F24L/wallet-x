@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import Heading from "../components/Heading";
-import SubHeading from "../components/SubHeading";
 import InputBox from "../components/InputBox";
-import LinkText from "../components/LinkText";
-import Button from "../components/Button";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
 import api from "../api";
@@ -23,8 +18,8 @@ const SignUp = () => {
     <>
       <NavBar onHome={false} />
       <div className="flex justify-center items-center flex-col grow mt-9">
-        <Heading label={"Sign Up"} />
-        <SubHeading label={"Enter your details to create a new wallet"} />
+        <p className="heading">Sign Up</p>
+        <p className="sub-heading">Enter your details to create a new wallet</p>
 
         <InputBox
           width={"sm:w-md"}
@@ -66,7 +61,7 @@ const SignUp = () => {
           placeholder={"John@12"}
         />
 
-        <Button
+        <button
           onClick={async () => {
             try {
               const result = await api.post(
@@ -91,14 +86,11 @@ const SignUp = () => {
               toast.error("Please try again.");
             }
           }}
-          label={"Create Wallet"}
-        />
+          className="btn-custom"
+        >Create Wallet</button>
 
-        <LinkText
-          text={"Already have an account?"}
-          link={"/login"}
-          toText={"Login"}
-        />
+        <p className="link-text">Already have an account? {" "} <Link className="link" to={"/login"} >Login</Link></p>
+       
 
         <div><Toaster position="top-center" /></div>
       </div>

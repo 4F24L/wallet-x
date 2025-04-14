@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minLength: 6
     },    
+    
 });
 
 const accountSchema = new mongoose.Schema({
@@ -49,6 +50,10 @@ const accountSchema = new mongoose.Schema({
     balance: {
         type: Number,
         required: true
+    },
+    transactions: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transaction'
     }
 })
 

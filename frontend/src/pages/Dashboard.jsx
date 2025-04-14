@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Balance from "../components/Balance";
-import Users from "../components/Users";
 import { jwtDecode } from "jwt-decode";
 import NavBar from "../components/NavBar";
 import api from "../api";
 import { useRecoilState } from "recoil";
 import { UserBal, UserName } from "../store/atoms/UserData";
 import WalletIcons from "../components/WalletIcons";
-import TransactionHistory from "../components/TransactionHistory";
+import TransactionHistory from "../components/TransHistory";
 
 const Dashboard = () => {
   const [name, setName] = useRecoilState(UserName);
@@ -51,6 +50,7 @@ const Dashboard = () => {
 
       <Balance />
       <WalletIcons />
+      <TransactionHistory/>
     
       
     </div>

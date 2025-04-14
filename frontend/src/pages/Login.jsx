@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import Heading from "../components/Heading";
-import SubHeading from "../components/SubHeading";
 import InputBox from "../components/InputBox";
-import Button from "../components/Button";
-import LinkText from "../components/LinkText";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
@@ -48,8 +43,8 @@ const Login = () => {
       <NavBar onHome={false} />
       <div className="flex justify-center items-center flex-col mt-20 sm:my-3">
         <Toaster position="top-center" />
-        <Heading label={"Login"} />
-        <SubHeading label={"Enter Login Credentials"} classs={"my-5"} />
+        <p className="heading">Login</p>
+        <p className="sub-heading my-5">Enter Login Credentials</p>
 
         <InputBox
           width={"sm:w-md"}
@@ -71,13 +66,9 @@ const Login = () => {
           placeholder={"John@12"}
         />
 
-        <Button onClick={handleClick} label={"Submit"} />
+        <button className="btn-custom" onClick={handleClick}>Submit</button>
 
-        <LinkText
-          link={"/signup"}
-          text={"Don't have an account?"}
-          toText={"Sign Up"}
-        />
+        <p className="link-text">Don't have an account?{" "} <Link className="link" to={"/signup"}>Sign Up</Link></p>
 
         {loading && <Loader />}
       </div>

@@ -28,7 +28,7 @@ const WalletIcons = () => {
       </button>
 
       <button onClick={()=>{
-        toast.error("Try Send Money!");
+        navigate("/history")
       }} className="flex flex-col items-center justify-center bg-gradient-to-r from-black to-gray-800 p-4 rounded-xl transition-all duration-300 hover:brightness-125">
         <History className="text-white w-6 h-6" />
         <span className="mt-2 text-sm font-medium text-white">History</span>

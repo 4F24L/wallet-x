@@ -15,28 +15,32 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    try {
-      const response = await api.post(`/api/v1/user/login`, {
-        username,
-        password,
-      });
-
-      if (response?.status === 200) {
-        toast.success(response?.data?.message);
+    if (!username || !password) return toast.error("Empty inputs...");
+  
+    const loginPromise = api.post(`/api/v1/user/login`, {
+      username,
+      password,
+    });
+  
+    toast.promise(loginPromise, {
+      loading: "Logging in...",
+      success: (response) => {
+        const token = response?.data?.token;
+        if (!token) throw new Error("Token missing in response");
+  
+        localStorage.setItem("token", token);
         setLoading(true);
-        localStorage.setItem("token", response?.data?.token);
-
         setTimeout(() => {
           navigate("/dashboard");
         }, 3500);
-      } else {
-        setLoading(false);
-        toast.error(response?.data?.message);
-      }
-    } catch (error) {
-      toast.error("Failed to login. Please try again.");
-    }
+        return response?.data?.message || "Logged in successfully!";
+      },
+      error: (err) => {
+        return err?.response?.data?.message || "Login failed. Try again.";
+      },
+    });
   };
+  
 
   return (
     <>

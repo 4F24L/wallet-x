@@ -63,36 +63,47 @@ const SignUp = () => {
 
         <button
           onClick={async () => {
-            try {
-              const result = await api.post(
-                `/api/v1/user/signup`,
-                {
-                  firstname,
-                  lastname,
-                  username,
-                  password,
-                }
-              );
-              // console.log(result.status);
-              result?.status === 200
-                ? toast.success(result.data.message)
-                : toast.error(result.data.message);
+            
+              const signupPromise = api.post(`/api/v1/user/signup`, {
+                firstname,
+                lastname,
+                username,
+                password,
+              });
+              
+              toast.promise(signupPromise, {
+                loading: "Registering...",
+                success: "User created successfully",
+                error: "Please try again",
+              });
+              try{
+                const result = await signupPromise;
               localStorage.setItem("token", result?.data?.token);
-
+              setTimeout(()=>{
+                toast.success("Redirecting to Login")
+              }, 1000)
               setTimeout(() => {
                 navigate("/login");
               }, 3000);
             } catch (error) {
-              toast.error("Please try again.");
+              console.log(error.response.data.message)
             }
           }}
           className="btn-custom"
-        >Create Wallet</button>
+        >
+          Create Wallet
+        </button>
 
-        <p className="link-text">Already have an account? {" "} <Link className="link" to={"/login"} >Login</Link></p>
-       
+        <p className="link-text">
+          Already have an account?{" "}
+          <Link className="link" to={"/login"}>
+            Login
+          </Link>
+        </p>
 
-        <div><Toaster position="top-center" /></div>
+        <div>
+          <Toaster position="top-center" />
+        </div>
       </div>
     </>
   );

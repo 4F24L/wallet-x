@@ -31,42 +31,47 @@ const SendMoney = () => {
       toast.error("Please enter amount");
       return;
     }
+  
     if (amount > userBal) {
       toast.error("Insufficient balance");
       return;
     }
-    try {
-      const result = await api
-        .post(
-          `/api/v1/account/transfer`,
-          {
-            sendTo: id,
-            amount,
-            note
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+  
+    const transferPromise = api.post(
+      `/api/v1/account/transfer`,
+      {
+        sendTo: id,
+        amount,
+        note,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  
+    toast.promise(transferPromise, {
+      loading: "Processing transfer...",
+      success: () => {
+        // Post-transfer UI logic
+        setTimeout(() => {
+          navigate("/receipt", {
+            state: {
+              recipient: recipientName,
+              amount: amount,
             },
-          }
-        )
-        .then((response) => {
-          toast.success("Transfer Succesfull");
-
-          setTimeout(() => {
-            navigate("/receipt", {
-              state: {
-                recipient: recipientName,
-                amount: amount,
-              },
-            });
-          }, 1500);
-          setAmount(0);
-        });
-    } catch (err) {
-      toast.error("Failed to send money");
-    }
+          });
+        }, 1500);
+        setAmount(0);
+        return "Transfer successful!";
+      },
+      error: (err) => {
+        return err?.response?.data?.message || "Failed to send money";
+      },
+    });
   };
+  
 
   return (
     <>

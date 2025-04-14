@@ -1,9 +1,21 @@
 import logo from "../assets/walletLogo.svg";
+import favicon from "../assets/image.png";
 import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
+import { useFavicon } from "react-haiku"
+import { useEffect } from "react";
 
 const NavBar = ({ onHome, loggedIn }) => {
+
+  const { setFavicon } = useFavicon();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setFavicon(favicon)
+  
+    
+  }, [])
+  
   return (
     <div className=" flex justify-between border-b-slate-700 bg-white items-center px-3 h-[9vh] cursor-pointer w-full">
       <div

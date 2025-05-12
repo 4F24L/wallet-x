@@ -9,7 +9,7 @@ dotenv.config();
 app.use(express.json());
 
 app.use(cors({
-  origin: [ "https://wallet-x-app.vercel.app", "https://walletx.afzaldev.in", "http://localhost:5173", ],
+  origin: [ "https://wallet-x-app.vercel.app", "https://walletx.afzaldev.in","https://walletx.afzalmir.me", "http://localhost:5173", ],
   methods : [ 'GET', 'POST', 'PUT', 'DELETE' ],
   credentials: true,  // allow session cookies from browser to pass through
 }));

@@ -8,12 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 app.use(express.json());
 
-const allowedOrigins = [
-  "https://wallet-x-app.vercel.app",
-  "https://walletx.afzaldev.in",
-  "https://walletx.afzalmir.me",
-  "http://localhost:5173",
-];
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS.split(',');
 
 app.use(
   cors({

@@ -8,7 +8,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 app.use(express.json());
 
-const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS.split(',');
+const allowedOrigins = (process.env.CORS_ALLOWED_ORIGINS || "").split(',').filter(Boolean);
+
 
 app.use(
   cors({

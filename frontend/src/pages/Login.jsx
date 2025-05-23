@@ -5,29 +5,30 @@ import Loader from "../components/Loader";
 import NavBar from "../components/NavBar";
 import toast, { Toaster } from "react-hot-toast";
 import api from "../api";
+import { useEffect } from "react";
+
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  
-
   const navigate = useNavigate();
 
   const handleClick = async () => {
     if (!username || !password) return toast.error("Empty inputs...");
-  
+
     const loginPromise = api.post(`/api/v1/user/login`, {
       username,
       password,
     });
-  
+
     toast.promise(loginPromise, {
       loading: "Logging in...",
       success: (response) => {
         const token = response?.data?.token;
         if (!token) throw new Error("Token missing in response");
-  
+
         localStorage.setItem("token", token);
         setLoading(true);
         setTimeout(() => {
@@ -40,7 +41,12 @@ const Login = () => {
       },
     });
   };
-  
+
+  useEffect(() => {
+  if (username === "demo_user" && password === "demo@123") {
+    handleClick();
+  }
+}, [username, password]);
 
   return (
     <>
@@ -70,9 +76,32 @@ const Login = () => {
           placeholder={"John@12"}
         />
 
-        <button className="btn-custom" onClick={handleClick}>Submit</button>
+        <button className="btn-custom" onClick={handleClick}>
+          Submit
+        </button>
 
-        <p className="link-text">Don't have an account?{" "} <Link className="link" to={"/signup"}>Sign Up</Link></p>
+        <p className="link-text">
+          Don't have an account?{" "}
+          <Link className="link" to={"/signup"}>
+            Sign Up
+          </Link>
+        </p>
+
+        <div className="mt-4 flex flex-col items-center">
+          <button
+            onClick={() => {
+              setUsername("demo_user");
+              setPassword("demo@123");
+            }}
+            className="send-btn"
+          >
+            Try as Recruiter (Demo Login)
+          </button>
+          <p className="text-base text-gray-600 mt-3">
+            Demo Credentials : Username: <code>demo_user</code>,
+            Password: <code>demo@123</code>
+          </p>
+        </div>
 
         {loading && <Loader />}
       </div>

@@ -9,14 +9,14 @@ const features = [
 ];
 
 const testimonials = [
-  { text: "Amazing experience!", user: "John Doe" },
-  { text: "Super easy to use!", user: "Jane Smith" },
-  { text: "Fast and secure transactions!", user: "Michael Lee" }
+  { text: "Amazing experience!", user: "Amit Roy" },
+  { text: "Super easy to use!", user: "A.S Rana" },
+  { text: "Fast and secure transactions!", user: "Nitish C Singha" }
 ];
 
 const stats = [
-  { icon: Users, title: "10K+ Users", description: "Trusted by thousands worldwide." },
-  { icon: DollarSign, title: "$1M+ Transactions", description: "Handled securely every day." }
+  { icon: Users, title: "25+ Users", description: "Trusted by thousands worldwide." },
+  { icon: DollarSign, title: "100+ Transactions", description: "Handled securely till now." }
 ];
 
 const HeroNext = () => {
